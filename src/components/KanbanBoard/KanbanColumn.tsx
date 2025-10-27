@@ -2,6 +2,7 @@ import React from "react";
 import { type KanbanColumnProps } from "./KanbanBoard.ts";
 import KanbanCard from "./KanbanCard.tsx";
 import { useModalStore } from "../../store/modalStore.ts";
+import { useDragAndDrop } from "../../hooks/useDragAndDrop.ts";
 
 const KanbanColumn: React.FC<KanbanColumnProps> = ({
   title,
@@ -10,16 +11,20 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
   tasks,
   id,
 }) => {
+  const { handleDragOver, handleDrop } = useDragAndDrop();
   const openModal = useModalStore((state) => state.openModal);
 
   const openAddTaskHandler = (id: string) => {
-    console.log(id);
     openModal(id);
   };
 
   return (
     <>
-      <div className="bg-neutral-100 rounded-lg py-2 px-4 flex flex-col">
+      <div
+        className="bg-neutral-100 rounded-lg py-2 px-4 flex flex-col"
+        onDragOver={handleDragOver}
+        onDrop={(e) => handleDrop(e, id)}
+      >
         <div className="flex gap-x-3 items-center">
           <span className={`rounded-circle size-2 ${color}`}></span>
           <h3>{title}</h3>

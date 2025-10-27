@@ -1,49 +1,39 @@
-import { useState, useCallback } from "react";
-
-interface DragState {
-  isDragging: boolean;
-  draggedId: string | null;
-  dropTargetId: string | null;
-  dragOverIndex: number | null;
-}
+import React, { useState } from "react";
 
 export const useDragAndDrop = () => {
-  const [state, setState] = useState<DragState>({
-    isDragging: false,
-    draggedId: null,
-    dropTargetId: null,
-    dragOverIndex: null,
-  });
+  const [dropIndicator, setDropIndicator] = useState<string | null>(null);
 
-  const handleDragStart = useCallback((id: string) => {
-    setState((prev) => ({
-      ...prev,
-      isDragging: true,
-      draggedId: id,
-    }));
-  }, []);
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    taskId: string,
+  ) => {
+    console.log(e.currentTarget);
+    e.dataTransfer.setData("text/plain", taskId.toString());
+  };
 
-  const handleDragOver = useCallback((targetId: string, index: number) => {
-    setState((prev) => ({
-      ...prev,
-      dropTargetId: targetId,
-      dragOverIndex: index,
-    }));
-  }, []);
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+    e.dataTransfer.clearData();
+    setDropIndicator(null);
+  };
 
-  const handleDragEnd = useCallback(() => {
-    setState({
-      isDragging: false,
-      draggedId: null,
-      dropTargetId: null,
-      dragOverIndex: null,
-    });
-  }, []);
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDropIndicator(e.currentTarget.id);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: string) => {
+    e.preventDefault();
+    const taskId = e.dataTransfer.getData("text/plain");
+    console.log(taskId);
+    console.log(status);
+  };
 
   return {
-    ...state,
+    dropIndicator,
+    setDropIndicator,
     handleDragStart,
-    handleDragOver,
     handleDragEnd,
+    handleDragOver,
+    handleDrop,
   };
 };

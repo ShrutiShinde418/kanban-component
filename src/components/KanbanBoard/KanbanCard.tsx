@@ -7,12 +7,17 @@ import {
   getPriorityColor,
   isOverdue,
 } from "../../utils/task.utils.ts";
+import { useDragAndDrop } from "../../hooks/useDragAndDrop.ts";
 
 const KanbanCard: React.FC<KanbanTask> = (task) => {
+  const { handleDragStart, handleDragEnd } = useDragAndDrop();
   return (
     <div
       className={`bg-white rounded-lg shadow-sm border-l-4 ${getPriorityColor(task?.priority || "low")} p-4 hover:shadow-md transition-shadow cursor-pointer`}
       draggable={true}
+      onDragEnd={handleDragEnd}
+      onDragStart={(e) => handleDragStart(e, task.id)}
+      id={task.id}
     >
       <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 leading-snug">
         {task.title}

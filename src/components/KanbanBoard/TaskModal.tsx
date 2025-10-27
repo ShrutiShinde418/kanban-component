@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   X,
   Plus,
@@ -10,10 +10,18 @@ import {
   LinkIcon,
   AlertCircle,
 } from "lucide-react";
+import { nanoid } from "nanoid";
+import { format } from "date-fns";
+import { useShallow } from "zustand/react/shallow";
 import Modal from "../primitives/Modal.tsx";
 import type { KanbanTask } from "./KanbanBoard.ts";
 import { useModalStore } from "../../store/modalStore.ts";
-import { useShallow } from "zustand/react/shallow";
+import { useKanbanStore } from "../../store/useKanbanStore.ts";
+import { DUMMY_TASKS, taskTypeMapper } from "../../utils/task.utils.ts";
+
+const initializeDummyTasks = () => {
+  useKanbanStore.setState({ tasks: DUMMY_TASKS });
+};
 
 const TaskModal: React.FC = () => {
   const [title, setTitle] = useState<KanbanTask["title"]>("");
@@ -27,12 +35,24 @@ const TaskModal: React.FC = () => {
   const [links, setLinks] = useState<KanbanTask["links"]>([]);
   const [linkInput, setLinkInput] = useState<string>("");
   const [priority, setPriority] = useState<KanbanTask["priority"]>("low");
-  const [dueDate, setDueDate] = useState<string>("");
+  const [dueDate, setDueDate] = useState<string>(
+    format(new Date(), "yyyy/MM/dd"),
+  );
+
+  useEffect(() => {
+    initializeDummyTasks();
+  }, []);
 
   const { taskModalType, closeModal } = useModalStore(
     useShallow((state) => ({
       taskModalType: state.taskModalType,
       closeModal: state.closeModal,
+    })),
+  );
+
+  const { addTaskHandler } = useKanbanStore(
+    useShallow((state) => ({
+      addTaskHandler: state.addTaskHandler,
     })),
   );
 
@@ -85,16 +105,21 @@ const TaskModal: React.FC = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({
+    addTaskHandler(taskModalType as string, {
       title,
       description,
       tags,
-      assignee,
-      avatar: avatarPreview,
+      assignee: {
+        name: assignee,
+        avatar: avatarPreview as string | undefined,
+      },
       comments,
       links,
       priority,
-      dueDate,
+      dueDate: new Date(dueDate),
+      status: taskModalType as string,
+      id: nanoid(),
+      createdAt: new Date(),
     });
     closeModal();
   };
@@ -108,7 +133,7 @@ const TaskModal: React.FC = () => {
         >
           <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
             <h2 className="text-2xl font-semibold text-gray-900">
-              Add New {taskModalType} Task
+              Add new {taskTypeMapper[taskModalType]} Task
             </h2>
             <button
               onClick={closeModal}
