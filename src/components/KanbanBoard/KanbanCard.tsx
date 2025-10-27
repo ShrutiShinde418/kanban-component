@@ -12,6 +12,7 @@ const KanbanCard: React.FC<KanbanTask> = (task) => {
   return (
     <div
       className={`bg-white rounded-lg shadow-sm border-l-4 ${getPriorityColor(task?.priority || "low")} p-4 hover:shadow-md transition-shadow cursor-pointer`}
+      draggable={true}
     >
       <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 leading-snug">
         {task.title}

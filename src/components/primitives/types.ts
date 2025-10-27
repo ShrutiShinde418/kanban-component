@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 export interface ModalProps {
-  open: () => HTMLDialogElement["close"];
-  onClose: () => HTMLDialogElement["close"];
+  open: boolean;
+  onClose: () => void;
   children: ReactNode;
 }

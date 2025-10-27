@@ -27,7 +27,7 @@ const KanbanBoard: React.FC = () => {
             createdAt: new Date("2025-10-20"),
           },
           {
-            id: "To Do",
+            id: "ToDo",
             title:
               "Implement user authentication with OAuth 2.0 and JWT tokens",
             priority: "low",

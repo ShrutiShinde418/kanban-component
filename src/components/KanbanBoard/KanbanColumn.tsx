@@ -1,13 +1,22 @@
 import React from "react";
 import { type KanbanColumnProps } from "./KanbanBoard.ts";
 import KanbanCard from "./KanbanCard.tsx";
+import { useModalStore } from "../../store/modalStore.ts";
 
 const KanbanColumn: React.FC<KanbanColumnProps> = ({
   title,
   numberOfTasks,
   color,
   tasks,
+  id,
 }) => {
+  const openModal = useModalStore((state) => state.openModal);
+
+  const openAddTaskHandler = (id: string) => {
+    console.log(id);
+    openModal(id);
+  };
+
   return (
     <>
       <div className="bg-neutral-100 rounded-lg py-2 px-4 flex flex-col">
@@ -23,6 +32,12 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
           {tasks.length > 0 &&
             tasks.map((task) => <KanbanCard {...task} key={task.id} />)}
         </div>
+        <button
+          className="mt-auto bg-primary-700 text-white py-3 font-semibold rounded-lg"
+          onClick={() => openAddTaskHandler(id)}
+        >
+          Add Task
+        </button>
       </div>
     </>
   );

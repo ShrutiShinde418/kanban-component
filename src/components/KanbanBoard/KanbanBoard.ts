@@ -13,6 +13,15 @@ export interface KanbanTask {
   dueDate?: Date;
   commentsCount?: number;
   attachmentsCount?: number;
+  comments?: {
+    id: string;
+    text: string;
+    timestamp: string;
+  }[];
+  links?: {
+    id: string;
+    url: string;
+  }[];
 }
 
 export interface KanbanColumnProps {

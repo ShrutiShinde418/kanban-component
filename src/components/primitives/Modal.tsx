@@ -8,8 +8,8 @@ const Modal: FC<ModalProps> = ({ children, open, onClose }) => {
   useEffect(() => {
     const modal = dialog.current;
 
-    if (dialog.current) {
-      dialog.current.showModal();
+    if (open) {
+      modal?.showModal();
     }
 
     return () => modal?.close();
