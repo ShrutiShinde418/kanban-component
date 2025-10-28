@@ -4,7 +4,7 @@ import TaskModal from "./components/KanbanBoard/TaskModal.tsx";
 
 function App() {
   return (
-    <div className="container 2xl:mx-auto my-4 px-5 font-custom">
+    <div className="container xl:mx-auto my-4 px-5 font-custom">
       <header className="flex justify-between items-center">
         <div className="flex flex-col gap-y-1">
           <h1 className="text-3xl font-medium">Tasks</h1>

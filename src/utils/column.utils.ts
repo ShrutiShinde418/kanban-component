@@ -1,3 +1,5 @@
+import type { MenuItem } from "../components/primitives/types.ts";
+
 export const kanbanBoards = [
   {
     id: "toDo",
@@ -15,5 +17,20 @@ export const kanbanBoards = [
     id: "done",
     title: "Done",
     color: "bg-success-500",
+  },
+];
+
+export const menuItems: MenuItem[] = [
+  {
+    id: 1,
+    title: "Rename",
+  },
+  {
+    id: 2,
+    title: "Set WIP Limit",
+  },
+  {
+    id: 3,
+    title: "Delete",
   },
 ];

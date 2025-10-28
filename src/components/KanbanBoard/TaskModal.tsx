@@ -14,6 +14,8 @@ import { nanoid } from "nanoid";
 import { format } from "date-fns";
 import { useShallow } from "zustand/react/shallow";
 import Modal from "../primitives/Modal.tsx";
+import Button from "../primitives/Button.tsx";
+import FormControl from "../primitives/FormControl.tsx";
 import type { KanbanTask } from "./KanbanBoard.ts";
 import { useModalStore } from "../../store/modalStore.ts";
 import { useKanbanStore } from "../../store/useKanbanStore.ts";
@@ -36,7 +38,7 @@ const TaskModal: React.FC = () => {
   const [linkInput, setLinkInput] = useState<string>("");
   const [priority, setPriority] = useState<KanbanTask["priority"]>("low");
   const [dueDate, setDueDate] = useState<string>(
-    format(new Date(), "yyyy/MM/dd")
+    format(new Date(), "yyyy/MM/dd"),
   );
 
   useEffect(() => {
@@ -47,13 +49,13 @@ const TaskModal: React.FC = () => {
     useShallow((state) => ({
       taskModalType: state.taskModalType,
       closeModal: state.closeModal,
-    }))
+    })),
   );
 
   const { addTaskHandler } = useKanbanStore(
     useShallow((state) => ({
       addTaskHandler: state.addTaskHandler,
-    }))
+    })),
   );
 
   const addTag = () => {
@@ -135,28 +137,30 @@ const TaskModal: React.FC = () => {
             <h2 className="text-2xl font-semibold text-gray-900">
               Add new {taskTypeMapper[taskModalType]} Task
             </h2>
-            <button
+            <Button
               onClick={closeModal}
               className="text-gray-400 hover:text-gray-600 transition-colors"
             >
               <X size={24} />
-            </button>
+            </Button>
           </div>
 
           <div className="p-6 space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Title <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter task title"
-                required
-              />
-            </div>
+            <FormControl
+              key={"Title"}
+              labelName={"Title"}
+              labelClasses={"block text-sm font-medium text-gray-700 mb-2"}
+              isFieldRequired={true}
+              inputProps={{
+                type: "text",
+                value: title,
+                onChange: (e) => setTitle(e.target.value),
+                className:
+                  "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                placeholder: "Enter task title",
+                required: true,
+              }}
+            />
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Description
@@ -255,13 +259,13 @@ const TaskModal: React.FC = () => {
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Add a tag"
                 />
-                <button
+                <Button
                   type="button"
                   onClick={addTag}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   <Plus size={20} />
-                </button>
+                </Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {tags?.map((tag, index) => (
@@ -270,13 +274,13 @@ const TaskModal: React.FC = () => {
                     className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
                   >
                     {tag}
-                    <button
+                    <Button
                       type="button"
                       onClick={() => removeTag(tag)}
                       className="hover:text-blue-900"
                     >
                       <X size={14} />
-                    </button>
+                    </Button>
                   </span>
                 ))}
               </div>
@@ -294,13 +298,13 @@ const TaskModal: React.FC = () => {
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Add a link URL"
                 />
-                <button
+                <Button
                   type="button"
                   onClick={addLink}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   <Plus size={20} />
-                </button>
+                </Button>
               </div>
               <div className="space-y-2">
                 {links?.map((link) => (
@@ -316,13 +320,13 @@ const TaskModal: React.FC = () => {
                     >
                       {link.url}
                     </a>
-                    <button
+                    <Button
                       type="button"
                       onClick={() => removeLink(link.id)}
                       className="ml-2 text-red-500 hover:text-red-700"
                     >
                       <Trash2 size={16} />
-                    </button>
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -339,13 +343,13 @@ const TaskModal: React.FC = () => {
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Add a comment"
                 />
-                <button
+                <Button
                   type="button"
                   onClick={addComment}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   <Plus size={20} />
-                </button>
+                </Button>
               </div>
               <div className="space-y-2 max-h-40 overflow-y-auto">
                 {comments?.map((comment) => (
@@ -359,31 +363,31 @@ const TaskModal: React.FC = () => {
                         {comment.timestamp.toLocaleString()}
                       </p>
                     </div>
-                    <button
+                    <Button
                       type="button"
                       onClick={() => removeComment(comment.id)}
                       className="ml-2 text-red-500 hover:text-red-700"
                     >
                       <Trash2 size={16} />
-                    </button>
+                    </Button>
                   </div>
                 ))}
               </div>
             </div>
             <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-              <button
+              <Button
                 type="button"
                 onClick={closeModal}
                 className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
               >
                 Create Task
-              </button>
+              </Button>
             </div>
           </div>
         </form>

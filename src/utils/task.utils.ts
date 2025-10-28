@@ -30,7 +30,7 @@ export const getPriorityColor = (priority: string): string => {
 export const reorderTasks = (
   tasks: string[],
   startIndex: number,
-  endIndex: number
+  endIndex: number,
 ): string[] => {
   const result = Array.from(tasks);
   const [removed] = result.splice(startIndex, 1);
@@ -45,7 +45,7 @@ export const moveTaskBetweenColumns = (
   sourceColumn: string[],
   destColumn: string[],
   sourceIndex: number,
-  destIndex: number
+  destIndex: number,
 ): { source: string[]; destination: string[] } => {
   const sourceClone = Array.from(sourceColumn);
   const destClone = Array.from(destColumn);
@@ -106,6 +106,96 @@ export const DUMMY_TASKS: {
       dueDate: new Date("2025-11-15"),
       commentsCount: 3,
       createdAt: new Date("2025-08-20"),
+      status: "toDo",
+      comments: [],
+      description: "",
+      links: [],
+    },
+    {
+      id: nanoid(),
+      title: "Refactor legacy code",
+      priority: "high",
+      assignee: {
+        name: "Tom Becker",
+        avatar:
+          "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=100&h=100&fit=crop",
+      },
+      tags: ["Maintenance", "Refactoring"],
+      dueDate: new Date("2025-11-16"),
+      commentsCount: 4,
+      createdAt: new Date("2025-08-30"),
+      status: "toDo",
+      comments: [],
+      description: "",
+      links: [],
+    },
+    {
+      id: nanoid(),
+      title: "Review accessibility standards",
+      priority: "medium",
+      assignee: {
+        name: "Priya Sharma",
+        avatar:
+          "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100&h=100&fit=crop",
+      },
+      tags: ["Frontend", "Accessibility"],
+      dueDate: new Date("2025-11-19"),
+      commentsCount: 1,
+      createdAt: new Date("2025-08-29"),
+      status: "toDo",
+      comments: [],
+      description: "",
+      links: [],
+    },
+    {
+      id: nanoid(),
+      title: "Conduct user interviews",
+      priority: "low",
+      assignee: {
+        name: "Nina D'Souza",
+        avatar:
+          "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop",
+      },
+      tags: ["Research", "UX"],
+      dueDate: new Date("2025-11-22"),
+      commentsCount: 0,
+      createdAt: new Date("2025-08-28"),
+      status: "toDo",
+      comments: [],
+      description: "",
+      links: [],
+    },
+    {
+      id: nanoid(),
+      title: "Design mobile app UI",
+      priority: "medium",
+      assignee: {
+        name: "Ravi Mehta",
+        avatar:
+          "https://images.unsplash.com/photo-1603415526960-f8f0a5f0c4f6?w=100&h=100&fit=crop",
+      },
+      tags: ["Design", "Mobile"],
+      dueDate: new Date("2025-11-17"),
+      commentsCount: 2,
+      createdAt: new Date("2025-08-26"),
+      status: "toDo",
+      comments: [],
+      description: "",
+      links: [],
+    },
+    {
+      id: nanoid(),
+      title: "Write unit tests for API",
+      priority: "medium",
+      assignee: {
+        name: "Emily Zhang",
+        avatar:
+          "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop",
+      },
+      tags: ["Testing", "Backend"],
+      dueDate: new Date("2025-11-14"),
+      commentsCount: 3,
+      createdAt: new Date("2025-08-23"),
       status: "toDo",
       comments: [],
       description: "",
