@@ -1,14 +1,21 @@
 import React, { useState } from "react";
+import { useKanbanStore } from "../store/useKanbanStore";
 
 export const useDragAndDrop = () => {
   const [dropIndicator, setDropIndicator] = useState<string | null>(null);
 
+  const updateTaskStatusHandler = useKanbanStore(
+    (state) => state.updateTaskStatusHandler
+  );
+
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
-    taskId: string,
+    taskDetails: { taskId: string; status: string }
   ) => {
-    console.log(e.currentTarget);
-    e.dataTransfer.setData("text/plain", taskId.toString());
+    e.dataTransfer.setData(
+      "text/plain",
+      `${taskDetails.taskId.toString()}|${taskDetails.status}`
+    );
   };
 
   const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
@@ -23,9 +30,12 @@ export const useDragAndDrop = () => {
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: string) => {
     e.preventDefault();
-    const taskId = e.dataTransfer.getData("text/plain");
-    console.log(taskId);
-    console.log(status);
+    const [taskId, originalTaskType] = e.dataTransfer
+      .getData("text/plain")
+      .split("|");
+
+    updateTaskStatusHandler(taskId, originalTaskType, status);
+    setDropIndicator(null);
   };
 
   return {

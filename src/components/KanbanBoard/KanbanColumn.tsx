@@ -11,7 +11,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
   tasks,
   id,
 }) => {
-  const { handleDragOver, handleDrop } = useDragAndDrop();
+  const { handleDragOver, handleDrop, dropIndicator } = useDragAndDrop();
   const openModal = useModalStore((state) => state.openModal);
 
   const openAddTaskHandler = (id: string) => {
@@ -21,9 +21,12 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
   return (
     <>
       <div
-        className="bg-neutral-100 rounded-lg py-2 px-4 flex flex-col"
+        className={`bg-neutral-100 rounded-lg py-2 px-4 flex flex-col ${
+          dropIndicator === id ? "border" : ""
+        }`}
         onDragOver={handleDragOver}
         onDrop={(e) => handleDrop(e, id)}
+        id={id}
       >
         <div className="flex gap-x-3 items-center">
           <span className={`rounded-circle size-2 ${color}`}></span>

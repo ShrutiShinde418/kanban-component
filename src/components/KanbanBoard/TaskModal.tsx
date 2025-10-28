@@ -36,7 +36,7 @@ const TaskModal: React.FC = () => {
   const [linkInput, setLinkInput] = useState<string>("");
   const [priority, setPriority] = useState<KanbanTask["priority"]>("low");
   const [dueDate, setDueDate] = useState<string>(
-    format(new Date(), "yyyy/MM/dd"),
+    format(new Date(), "yyyy/MM/dd")
   );
 
   useEffect(() => {
@@ -47,18 +47,18 @@ const TaskModal: React.FC = () => {
     useShallow((state) => ({
       taskModalType: state.taskModalType,
       closeModal: state.closeModal,
-    })),
+    }))
   );
 
   const { addTaskHandler } = useKanbanStore(
     useShallow((state) => ({
       addTaskHandler: state.addTaskHandler,
-    })),
+    }))
   );
 
   const addTag = () => {
     if (tagInput.trim() && !tags?.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()]);
+      setTags([...(tags || []), tagInput.trim()]);
       setTagInput("");
     }
   };

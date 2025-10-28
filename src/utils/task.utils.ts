@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import type { KanbanTask } from "../components/KanbanBoard/KanbanBoard";
 
 export const isOverdue = (dueDate: Date): boolean => {
   return new Date() > dueDate;
@@ -29,7 +30,7 @@ export const getPriorityColor = (priority: string): string => {
 export const reorderTasks = (
   tasks: string[],
   startIndex: number,
-  endIndex: number,
+  endIndex: number
 ): string[] => {
   const result = Array.from(tasks);
   const [removed] = result.splice(startIndex, 1);
@@ -44,7 +45,7 @@ export const moveTaskBetweenColumns = (
   sourceColumn: string[],
   destColumn: string[],
   sourceIndex: number,
-  destIndex: number,
+  destIndex: number
 ): { source: string[]; destination: string[] } => {
   const sourceClone = Array.from(sourceColumn);
   const destClone = Array.from(destColumn);
@@ -69,7 +70,11 @@ export const taskTypeMapper = {
   done: "Done",
 };
 
-export const DUMMY_TASKS = {
+export const DUMMY_TASKS: {
+  toDo: KanbanTask[];
+  inProgress: KanbanTask[];
+  done: KanbanTask[];
+} = {
   toDo: [
     {
       id: nanoid(),
@@ -79,9 +84,14 @@ export const DUMMY_TASKS = {
         name: "Sarah Johnson",
       },
       tags: ["Backend", "Security", "API", "Authentication"],
-      dueDate: "2025-10-20",
+      dueDate: new Date("2025-10-20"),
       commentsCount: 5,
       attachmentsCount: 2,
+      createdAt: new Date("2025-08-20"),
+      status: "toDo",
+      comments: [],
+      description: "",
+      links: [],
     },
     {
       id: nanoid(),
@@ -93,8 +103,13 @@ export const DUMMY_TASKS = {
           "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
       },
       tags: ["Design", "UI/UX"],
-      dueDate: "2025-11-15",
+      dueDate: new Date("2025-11-15"),
       commentsCount: 3,
+      createdAt: new Date("2025-08-20"),
+      status: "toDo",
+      comments: [],
+      description: "",
+      links: [],
     },
   ],
   inProgress: [
@@ -107,8 +122,13 @@ export const DUMMY_TASKS = {
         name: "Alex Rivera",
       },
       tags: ["Frontend", "Bug", "Mobile"],
-      dueDate: "2025-10-28",
+      dueDate: new Date("2025-10-28"),
       attachmentsCount: 1,
+      createdAt: new Date("2025-08-20"),
+      status: "inProgress",
+      comments: [],
+      description: "",
+      links: [],
     },
   ],
   done: [
@@ -120,8 +140,13 @@ export const DUMMY_TASKS = {
         name: "Emily Watson",
       },
       tags: ["Docs"],
-      dueDate: "2025-11-30",
+      dueDate: new Date("2025-11-30"),
       commentsCount: 1,
+      createdAt: new Date("2025-08-20"),
+      status: "done",
+      comments: [],
+      description: "",
+      links: [],
     },
   ],
 };
