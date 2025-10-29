@@ -3,6 +3,7 @@ import Input from "./Input.tsx";
 import type { FormControlProps } from "./types.ts";
 
 const FormControl: React.FC<FormControlProps> = ({
+  icon,
   labelName,
   isFieldRequired,
   labelClasses,
@@ -11,6 +12,7 @@ const FormControl: React.FC<FormControlProps> = ({
   return (
     <div>
       <label className={labelClasses}>
+        {icon}
         {labelName} {isFieldRequired && <span className="text-red-500">*</span>}
       </label>
       <Input {...inputProps} />

@@ -12,6 +12,14 @@ type KanbanStore = {
     originalTaskType: KanbanTask["status"],
     newTaskType: KanbanTask["status"]
   ) => void;
+  deleteSingleTaskHandler: (
+    taskId: KanbanTask["id"],
+    taskType: KanbanTask["status"]
+  ) => void;
+  updateSingleTaskHandler: (
+    taskType: KanbanTask["status"],
+    updatedTaskItem: Partial<KanbanTask>
+  ) => void;
 };
 
 const initialColumns = ["toDo", "inProgress", "done"];
@@ -51,6 +59,40 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
           ...state.tasks[newTaskType],
           { ...task, status: newTaskType },
         ],
+      },
+    }));
+  },
+  deleteSingleTaskHandler: (taskId, taskType) => {
+    const { tasks } = get();
+
+    const task = tasks[taskType].find((t) => t.id === taskId);
+    if (!task) return;
+
+    const updatedTaskList = tasks[taskType].filter(
+      (item) => item.id !== taskId
+    );
+
+    set((state) => ({
+      tasks: {
+        ...state.tasks,
+        [taskType]: updatedTaskList,
+      },
+    }));
+  },
+  updateSingleTaskHandler: (taskType, updatedTaskItem) => {
+    const { tasks } = get();
+
+    const task = tasks[taskType].find((t) => t.id === updatedTaskItem.id);
+    if (!task) return;
+
+    const updatedTasksArray = tasks[taskType].map((item) =>
+      item.id === task.id ? { ...item, ...updatedTaskItem } : item
+    );
+
+    set((state) => ({
+      tasks: {
+        ...state.tasks,
+        [taskType]: updatedTasksArray,
       },
     }));
   },

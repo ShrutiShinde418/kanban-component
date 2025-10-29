@@ -30,7 +30,7 @@ export const getPriorityColor = (priority: string): string => {
 export const reorderTasks = (
   tasks: string[],
   startIndex: number,
-  endIndex: number,
+  endIndex: number
 ): string[] => {
   const result = Array.from(tasks);
   const [removed] = result.splice(startIndex, 1);
@@ -45,7 +45,7 @@ export const moveTaskBetweenColumns = (
   sourceColumn: string[],
   destColumn: string[],
   sourceIndex: number,
-  destIndex: number,
+  destIndex: number
 ): { source: string[]; destination: string[] } => {
   const sourceClone = Array.from(sourceColumn);
   const destClone = Array.from(destColumn);
@@ -90,7 +90,8 @@ export const DUMMY_TASKS: {
       createdAt: new Date("2025-08-20"),
       status: "toDo",
       comments: [],
-      description: "",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque varius risus vitae tempus luctus. Integer accumsan, metus sit amet convallis efficitur, neque nunc ullamcorper purus, non molestie arcu erat a quam. Nulla vestibulum dolor nec efficitur sodales. Praesent vulputate, leo pharetra placerat laoreet, lorem sem viverra nisi, sit amet tempor nisi odio eu justo. Duis varius erat porttitor ornare interdum. Nullam sodales lobortis eros, eget auctor enim efficitur sed. Vestibulum tristique efficitur lacus, quis elementum tortor sodales at. Nunc eget tortor lorem. Duis non orci sapien. Morbi quis aliquet leo, at convallis risus. Cras blandit finibus eros vitae venenatis. Nam est tellus, sagittis a ligula vitae, sollicitudin laoreet risus.",
       links: [],
     },
     {

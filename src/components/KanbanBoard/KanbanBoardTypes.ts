@@ -2,7 +2,7 @@ export interface KanbanTask {
   id: string;
   title: string;
   description?: string;
-  status: string; // column identifier
+  status: string;
   priority?: "low" | "medium" | "high" | "urgent";
   assignee?: {
     name?: string;
@@ -28,8 +28,8 @@ export interface KanbanColumnProps {
   id: string;
   title: string;
   color: string;
-  taskIds?: string[]; // ordered list of task IDs
-  maxTasks?: number; // WIP limit (optional)
+  taskIds?: string[];
+  maxTasks?: number;
   numberOfTasks: number;
   tasks: KanbanTask[];
 }
@@ -41,7 +41,7 @@ export interface KanbanViewProps {
     taskId: string,
     fromColumn: string,
     toColumn: string,
-    newIndex: number,
+    newIndex: number
   ) => void;
   onTaskCreate: (columnId: string, task: KanbanTask) => void;
   onTaskUpdate: (taskId: string, updates: Partial<KanbanTask>) => void;

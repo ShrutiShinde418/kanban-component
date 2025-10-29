@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { type KanbanColumnProps } from "./KanbanBoard.ts";
 import KanbanCard from "./KanbanCard.tsx";
-import { useModalStore } from "../../store/modalStore.ts";
+import { useModalStore } from "../../store/useModalStore.ts";
 import { useDragAndDrop } from "../../hooks/useDragAndDrop.ts";
 import { Ellipsis } from "lucide-react";
 import Menu from "../primitives/Menu.tsx";
@@ -61,9 +61,9 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
             />
           )}
         </div>
-        {tasks.length === 0 && <p className="self-center mt-20">No Tasks</p>}
+        {tasks?.length === 0 && <p className="self-center mt-20">No Tasks</p>}
         <div className="flex flex-col gap-y-5 mt-4 mb-5">
-          {tasks.length > 0 &&
+          {tasks?.length > 0 &&
             tasks.map((task) => <KanbanCard {...task} key={task.id} />)}
         </div>
         <button

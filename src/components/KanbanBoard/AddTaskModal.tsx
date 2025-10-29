@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   X,
   Plus,
@@ -15,17 +15,14 @@ import { format } from "date-fns";
 import { useShallow } from "zustand/react/shallow";
 import Modal from "../primitives/Modal.tsx";
 import Button from "../primitives/Button.tsx";
+import Input from "../primitives/Input.tsx";
 import FormControl from "../primitives/FormControl.tsx";
 import type { KanbanTask } from "./KanbanBoard.ts";
-import { useModalStore } from "../../store/modalStore.ts";
+import { useModalStore } from "../../store/useModalStore.ts";
 import { useKanbanStore } from "../../store/useKanbanStore.ts";
-import { DUMMY_TASKS, taskTypeMapper } from "../../utils/task.utils.ts";
+import { taskTypeMapper } from "../../utils/task.utils.ts";
 
-const initializeDummyTasks = () => {
-  useKanbanStore.setState({ tasks: DUMMY_TASKS });
-};
-
-const TaskModal: React.FC = () => {
+const AddTaskModal: React.FC = () => {
   const [title, setTitle] = useState<KanbanTask["title"]>("");
   const [description, setDescription] = useState<KanbanTask["description"]>("");
   const [tags, setTags] = useState<KanbanTask["tags"]>([]);
@@ -38,24 +35,20 @@ const TaskModal: React.FC = () => {
   const [linkInput, setLinkInput] = useState<string>("");
   const [priority, setPriority] = useState<KanbanTask["priority"]>("low");
   const [dueDate, setDueDate] = useState<string>(
-    format(new Date(), "yyyy/MM/dd"),
+    format(new Date(), "yyyy/MM/dd")
   );
 
-  useEffect(() => {
-    initializeDummyTasks();
-  }, []);
-
-  const { taskModalType, closeModal } = useModalStore(
+  const { taskInfo, closeModal } = useModalStore(
     useShallow((state) => ({
-      taskModalType: state.taskModalType,
+      taskInfo: state.taskInfo,
       closeModal: state.closeModal,
-    })),
+    }))
   );
 
   const { addTaskHandler } = useKanbanStore(
     useShallow((state) => ({
       addTaskHandler: state.addTaskHandler,
-    })),
+    }))
   );
 
   const addTag = () => {
@@ -107,7 +100,7 @@ const TaskModal: React.FC = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addTaskHandler(taskModalType as string, {
+    addTaskHandler(taskInfo as string, {
       title,
       description,
       tags,
@@ -119,7 +112,7 @@ const TaskModal: React.FC = () => {
       links,
       priority,
       dueDate: new Date(dueDate),
-      status: taskModalType as string,
+      status: taskInfo as string,
       id: nanoid(),
       createdAt: new Date(),
     });
@@ -127,7 +120,10 @@ const TaskModal: React.FC = () => {
   };
 
   return (
-    <Modal onClose={closeModal} open={Boolean(taskModalType)}>
+    <Modal
+      onClose={closeModal}
+      open={Boolean(typeof taskInfo === "string")}
+    >
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <form
           className="bg-white rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
@@ -135,7 +131,7 @@ const TaskModal: React.FC = () => {
         >
           <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
             <h2 className="text-2xl font-semibold text-gray-900">
-              Add new {taskTypeMapper[taskModalType]} Task
+              Add new {taskTypeMapper[taskInfo]} Task
             </h2>
             <Button
               onClick={closeModal}
@@ -161,18 +157,21 @@ const TaskModal: React.FC = () => {
                 required: true,
               }}
             />
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                placeholder="Enter task description"
-              />
-            </div>
+            <FormControl
+              key={"Description"}
+              labelName={"Description"}
+              labelClasses={"block text-sm font-medium text-gray-700 mb-2"}
+              isFieldRequired={false}
+              inputProps={{
+                isTextArea: true,
+                value: description,
+                onChange: (e) => setDescription(e.target.value),
+                rows: 4,
+                className:
+                  "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none",
+                placeholder: "Enter task description",
+              }}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -192,33 +191,39 @@ const TaskModal: React.FC = () => {
                   <option value="urgent">Urgent</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Calendar size={16} className="inline mr-1" />
-                  Due Date
-                </label>
-                <input
-                  type="date"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
+              <FormControl
+                key={"Due Date"}
+                labelName={"Due Date"}
+                labelClasses={"block text-sm font-medium text-gray-700 mb-2"}
+                isFieldRequired={true}
+                inputProps={{
+                  type: "date",
+                  value: dueDate,
+                  onChange: (e) => setDueDate(e.target.value),
+                  className:
+                    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                  required: true,
+                }}
+                icon={<Calendar size={16} className="inline mr-1" />}
+              />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <User size={16} className="inline mr-1" />
-                  Assignee
-                </label>
-                <input
-                  type="text"
-                  value={assignee}
-                  onChange={(e) => setAssignee(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter assignee name"
-                />
-              </div>
+              <FormControl
+                key={"Assignee"}
+                labelName={"Assignee"}
+                labelClasses={"block text-sm font-medium text-gray-700 mb-2"}
+                isFieldRequired={true}
+                inputProps={{
+                  type: "text",
+                  value: assignee,
+                  onChange: (e) => setAssignee(e.target.value),
+                  className:
+                    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                  required: true,
+                  placeholder: "Enter assignee name",
+                }}
+                icon={<User size={16} className="inline mr-1" />}
+              />
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <Upload size={16} className="inline mr-1" />
@@ -236,7 +241,8 @@ const TaskModal: React.FC = () => {
                     <div className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-center text-sm text-gray-600">
                       Choose File
                     </div>
-                    <input
+                    <Input
+                      isTextArea={false}
                       type="file"
                       accept="image/*"
                       onChange={handleAvatarUpload}
@@ -252,7 +258,8 @@ const TaskModal: React.FC = () => {
                 Tags
               </label>
               <div className="flex gap-2 mb-2">
-                <input
+                <Input
+                  isTextArea={false}
                   type="text"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
@@ -291,7 +298,8 @@ const TaskModal: React.FC = () => {
                 Links
               </label>
               <div className="flex gap-2 mb-2">
-                <input
+                <Input
+                  isTextArea={false}
                   type="url"
                   value={linkInput}
                   onChange={(e) => setLinkInput(e.target.value)}
@@ -336,7 +344,8 @@ const TaskModal: React.FC = () => {
                 Comments
               </label>
               <div className="flex gap-2 mb-2">
-                <input
+                <Input
+                  isTextArea={false}
                   type="text"
                   value={commentInput}
                   onChange={(e) => setCommentInput(e.target.value)}
@@ -396,4 +405,4 @@ const TaskModal: React.FC = () => {
   );
 };
 
-export default TaskModal;
+export default AddTaskModal;

@@ -1,6 +1,7 @@
 import { UserRoundPlus } from "lucide-react";
 import KanbanBoard from "./components/KanbanBoard/KanbanBoard.tsx";
-import TaskModal from "./components/KanbanBoard/TaskModal.tsx";
+import AddTaskModal from "./components/KanbanBoard/AddTaskModal.tsx";
+import TaskDetailModal from "./components/KanbanBoard/TaskDetailModal.tsx";
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
         </div>
       </header>
       <KanbanBoard />
-      <TaskModal />
+      <AddTaskModal />
+      <TaskDetailModal />
     </div>
   );
 }

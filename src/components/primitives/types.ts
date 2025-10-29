@@ -8,18 +8,20 @@ export interface ModalProps {
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
-
-// export interface InputProps
-//   extends React.InputHTMLAttributes<HTMLInputElement> {
-//   initialValue: string;
-// }
+export type InputProps =
+  | (React.InputHTMLAttributes<HTMLInputElement> & {
+      isTextArea?: false;
+    })
+  | (React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+      isTextArea: true;
+    });
 
 export interface FormControlProps {
   labelName: string;
   isFieldRequired: boolean;
   labelClasses?: string;
   inputProps: InputProps;
+  icon?: React.ReactNode;
 }
 
 export interface MenuItem {
