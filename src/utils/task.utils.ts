@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import type { KanbanTask } from "../components/KanbanBoard/KanbanBoard";
+import type { KanbanTask } from "../components/KanbanBoard/KanbanBoardTypes.ts";
 
 export const isOverdue = (dueDate: Date): boolean => {
   return new Date() > dueDate;
@@ -30,7 +30,7 @@ export const getPriorityColor = (priority: string): string => {
 export const reorderTasks = (
   tasks: string[],
   startIndex: number,
-  endIndex: number
+  endIndex: number,
 ): string[] => {
   const result = Array.from(tasks);
   const [removed] = result.splice(startIndex, 1);
@@ -45,7 +45,7 @@ export const moveTaskBetweenColumns = (
   sourceColumn: string[],
   destColumn: string[],
   sourceIndex: number,
-  destIndex: number
+  destIndex: number,
 ): { source: string[]; destination: string[] } => {
   const sourceClone = Array.from(sourceColumn);
   const destClone = Array.from(destColumn);

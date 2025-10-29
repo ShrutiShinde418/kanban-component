@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { type KanbanColumnProps } from "./KanbanBoard.ts";
+import { type KanbanColumnProps } from "./KanbanBoardTypes.ts";
 import KanbanCard from "./KanbanCard.tsx";
 import { useModalStore } from "../../store/useModalStore.ts";
 import { useDragAndDrop } from "../../hooks/useDragAndDrop.ts";
@@ -32,7 +32,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
   return (
     <>
       <div
-        className={`bg-neutral-100 rounded-lg p-4 flex flex-col overflow-y-scroll h-svh ${
+        className={`bg-neutral-100 rounded-lg p-4 flex flex-col overflow-y-scroll h-svh flex-1 xl:min-w-80 ${
           dragEnterState ? "border-2 border-gray-600" : "border-0"
         }`}
         onDragOver={handleDragOver}

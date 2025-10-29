@@ -16,7 +16,7 @@ const KanbanBoard: React.FC = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-3 gap-x-5 gap-y-5 mt-5 min-h-dvh">
+    <div className={`flex gap-x-5 gap-y-5 mt-5 min-h-dvh`}>
       {kanbanBoards.map((board) => (
         <KanbanColumn
           id={board.id}
