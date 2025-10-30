@@ -1,22 +1,12 @@
-import React, { useState, useEffect } from "react";
-import {
-  X,
-  Plus,
-  Trash2,
-  Calendar,
-  Upload,
-  Tag,
-  User,
-  LinkIcon,
-  AlertCircle,
-} from "lucide-react";
+import React, { type FormEvent, useEffect, useState } from "react";
+import { AlertCircle, Calendar, Plus, Tag, User, X } from "lucide-react";
 import { format } from "date-fns";
 import { useShallow } from "zustand/react/shallow";
 import Modal from "../primitives/Modal.tsx";
 import Button from "../primitives/Button.tsx";
 import Input from "../primitives/Input.tsx";
 import FormControl from "../primitives/FormControl.tsx";
-import type { KanbanTask } from "./KanbanBoard.ts";
+import type { KanbanTask } from "./KanbanBoardTypes.ts";
 import { useModalStore } from "../../store/useModalStore.ts";
 import { useKanbanStore } from "../../store/useKanbanStore.ts";
 
@@ -25,32 +15,32 @@ const TaskDetailModal: React.FC = () => {
     useShallow((state) => ({
       taskItem: state.taskItem,
       closeModal: state.closeModal,
-    }))
+    })),
   );
 
   const { deleteSingleTaskHandler, updateSingleTaskHandler } = useKanbanStore(
     useShallow((state) => ({
       deleteSingleTaskHandler: state.deleteSingleTaskHandler,
       updateSingleTaskHandler: state.updateSingleTaskHandler,
-    }))
+    })),
   );
 
   const [title, setTitle] = useState<KanbanTask["title"]>(
-    taskItem?.["title"] ?? ""
+    taskItem?.["title"] ?? "",
   );
   const [description, setDescription] = useState<KanbanTask["description"]>(
-    taskItem?.description
+    taskItem?.description,
   );
   const [tags, setTags] = useState<KanbanTask["tags"]>(taskItem?.tags);
   const [tagInput, setTagInput] = useState<string>("");
   const [assignee, setAssignee] = useState<string>(
-    taskItem?.assignee?.name ?? "Unknown"
+    taskItem?.assignee?.name ?? "Unknown",
   );
   const [priority, setPriority] = useState<KanbanTask["priority"]>(
-    taskItem?.priority
+    taskItem?.priority,
   );
   const [dueDate, setDueDate] = useState<string | Date>(
-    taskItem?.dueDate ?? format(new Date(), "yyyy/MM/dd")
+    taskItem?.dueDate ?? format(new Date(), "yyyy/MM/dd"),
   );
 
   useEffect(() => {
@@ -66,7 +56,7 @@ const TaskDetailModal: React.FC = () => {
 
   const removeTask = (
     taskId: KanbanTask["id"],
-    taskType: KanbanTask["status"]
+    taskType: KanbanTask["status"],
   ) => {
     deleteSingleTaskHandler(taskId, taskType);
     closeModal();
@@ -74,7 +64,7 @@ const TaskDetailModal: React.FC = () => {
 
   const updateTask = (
     taskId: KanbanTask["id"],
-    taskType: KanbanTask["status"]
+    taskType: KanbanTask["status"],
   ) => {
     const updatedTaskItem: Partial<KanbanTask> = {
       id: taskId,
@@ -99,10 +89,10 @@ const TaskDetailModal: React.FC = () => {
   };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags?.filter((tag) => tag !== tagToRemove));
+    setTags(tags?.filter((tag: string) => tag !== tagToRemove));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     closeModal();
   };
@@ -225,13 +215,13 @@ const TaskDetailModal: React.FC = () => {
                 <Button
                   type="button"
                   onClick={addTag}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="px-4 py-2 bg-primary-700 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   <Plus size={20} />
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2">
-                {tags?.map((tag, index) => (
+                {tags?.map((tag: string, index: number) => (
                   <span
                     key={index}
                     className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
@@ -255,7 +245,7 @@ const TaskDetailModal: React.FC = () => {
                 onClick={() =>
                   removeTask(
                     taskItem?.id as KanbanTask["id"],
-                    taskItem?.status as KanbanTask["status"]
+                    taskItem?.status as KanbanTask["status"],
                   )
                 }
               >
@@ -263,11 +253,11 @@ const TaskDetailModal: React.FC = () => {
               </Button>
               <Button
                 type="submit"
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="px-6 py-2 bg-primary-700 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 onClick={() =>
                   updateTask(
                     taskItem?.id as KanbanTask["id"],
-                    taskItem?.status as KanbanTask["status"]
+                    taskItem?.status as KanbanTask["status"],
                   )
                 }
               >

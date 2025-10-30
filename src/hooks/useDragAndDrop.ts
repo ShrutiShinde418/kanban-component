@@ -29,7 +29,7 @@ export const useDragAndDrop = () => {
     setDropIndicator(e.currentTarget.id);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: string) => {
+  const handleDrop = (e: React.DragEvent<HTMLElement>, status: string) => {
     e.preventDefault();
     setDragEnterState(false);
     const [taskId, originalTaskType] = e.dataTransfer

@@ -1,5 +1,9 @@
 import { create } from "zustand";
-import type { KanbanTask } from "../components/KanbanBoard/KanbanBoardTypes.ts";
+import type {
+  KanbanColumnProps,
+  KanbanTask,
+} from "../components/KanbanBoard/KanbanBoardTypes.ts";
+import { kanbanBoards } from "../utils/column.utils.ts";
 
 type KanbanStore = {
   columns: string[];
@@ -7,6 +11,10 @@ type KanbanStore = {
     [key: string]: KanbanTask[];
   };
   addTaskHandler: (taskType: string, task: KanbanTask) => void;
+  kanbanBoards: Pick<KanbanColumnProps, "id" | "title" | "color">[];
+  addKanbanBoard: (
+    board: Pick<KanbanColumnProps, "id" | "title" | "color">,
+  ) => void;
   updateTaskStatusHandler: (
     taskId: KanbanTask["id"],
     originalTaskType: KanbanTask["status"],
@@ -22,7 +30,7 @@ type KanbanStore = {
   ) => void;
 };
 
-const initialColumns = ["toDo", "inProgress", "done"];
+const initialColumns = kanbanBoards.map((item) => item.id);
 
 export const useKanbanStore = create<KanbanStore>((set, get) => ({
   columns: initialColumns,
@@ -33,8 +41,17 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
     },
     {} as Record<string, KanbanTask[]>,
   ),
-  setInitialColumns: (columns: string[]) => {
-    set(() => ({ columns }));
+  kanbanBoards: kanbanBoards,
+  addKanbanBoard: (board) => {
+    if (get().kanbanBoards.length === 6) return;
+    set((state) => ({
+      columns: [...state.columns, board.id],
+      tasks: {
+        ...state.tasks,
+        [board.id]: [],
+      },
+      kanbanBoards: [...state.kanbanBoards, board],
+    }));
   },
   addTaskHandler: (taskType: string, task: KanbanTask) =>
     set((state) => ({

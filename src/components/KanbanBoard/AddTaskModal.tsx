@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { type ChangeEvent, type FormEvent, useState } from "react";
 import {
-  X,
-  Plus,
-  Trash2,
-  Calendar,
-  Upload,
-  Tag,
-  User,
-  LinkIcon,
   AlertCircle,
+  Calendar,
+  LinkIcon,
+  Plus,
+  Tag,
+  Trash2,
+  Upload,
+  User,
+  X,
 } from "lucide-react";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
@@ -17,7 +17,7 @@ import Modal from "../primitives/Modal.tsx";
 import Button from "../primitives/Button.tsx";
 import Input from "../primitives/Input.tsx";
 import FormControl from "../primitives/FormControl.tsx";
-import type { KanbanTask } from "./KanbanBoard.ts";
+import type { KanbanTask } from "./KanbanBoardTypes.ts";
 import { useModalStore } from "../../store/useModalStore.ts";
 import { useKanbanStore } from "../../store/useKanbanStore.ts";
 import { taskTypeMapper } from "../../utils/task.utils.ts";
@@ -35,20 +35,20 @@ const AddTaskModal: React.FC = () => {
   const [linkInput, setLinkInput] = useState<string>("");
   const [priority, setPriority] = useState<KanbanTask["priority"]>("low");
   const [dueDate, setDueDate] = useState<string>(
-    format(new Date(), "yyyy/MM/dd")
+    format(new Date(), "yyyy/MM/dd"),
   );
 
   const { taskInfo, closeModal } = useModalStore(
     useShallow((state) => ({
       taskInfo: state.taskInfo,
       closeModal: state.closeModal,
-    }))
+    })),
   );
 
   const { addTaskHandler } = useKanbanStore(
     useShallow((state) => ({
       addTaskHandler: state.addTaskHandler,
-    }))
+    })),
   );
 
   const addTag = () => {
@@ -65,8 +65,12 @@ const AddTaskModal: React.FC = () => {
   const addComment = () => {
     if (commentInput.trim()) {
       setComments([
-        ...comments,
-        { id: Date.now(), text: commentInput.trim(), timestamp: new Date() },
+        ...(comments ?? []),
+        {
+          id: nanoid(),
+          text: commentInput.trim(),
+          timestamp: new Date().toLocaleString(),
+        },
       ]);
       setCommentInput("");
     }
@@ -78,7 +82,7 @@ const AddTaskModal: React.FC = () => {
 
   const addLink = () => {
     if (linkInput.trim()) {
-      setLinks([...links, { id: Date.now(), url: linkInput.trim() }]);
+      setLinks([...(links ?? []), { id: nanoid(), url: linkInput.trim() }]);
       setLinkInput("");
     }
   };
@@ -87,7 +91,8 @@ const AddTaskModal: React.FC = () => {
     setLinks(links?.filter((link) => link.id !== id));
   };
 
-  const handleAvatarUpload = (e) => {
+  const handleAvatarUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -98,7 +103,7 @@ const AddTaskModal: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     addTaskHandler(taskInfo as string, {
       title,
@@ -120,10 +125,7 @@ const AddTaskModal: React.FC = () => {
   };
 
   return (
-    <Modal
-      onClose={closeModal}
-      open={Boolean(typeof taskInfo === "string")}
-    >
+    <Modal onClose={closeModal} open={Boolean(typeof taskInfo === "string")}>
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <form
           className="bg-white rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
@@ -131,7 +133,8 @@ const AddTaskModal: React.FC = () => {
         >
           <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
             <h2 className="text-2xl font-semibold text-gray-900">
-              Add new {taskTypeMapper[taskInfo]} Task
+              Add new {taskTypeMapper[taskInfo as keyof typeof taskTypeMapper]}
+              Task
             </h2>
             <Button
               onClick={closeModal}
@@ -269,7 +272,7 @@ const AddTaskModal: React.FC = () => {
                 <Button
                   type="button"
                   onClick={addTag}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="px-4 py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-500 transition-colors"
                 >
                   <Plus size={20} />
                 </Button>
@@ -309,7 +312,7 @@ const AddTaskModal: React.FC = () => {
                 <Button
                   type="button"
                   onClick={addLink}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="px-4 py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-500 transition-colors"
                 >
                   <Plus size={20} />
                 </Button>
@@ -355,7 +358,7 @@ const AddTaskModal: React.FC = () => {
                 <Button
                   type="button"
                   onClick={addComment}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="px-4 py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-500 transition-colors"
                 >
                   <Plus size={20} />
                 </Button>
@@ -393,7 +396,7 @@ const AddTaskModal: React.FC = () => {
               </Button>
               <Button
                 type="submit"
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="px-6 py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-500 transition-colors"
               >
                 Create Task
               </Button>

@@ -1,6 +1,6 @@
 import React from "react";
-import { MessageCircle, Paperclip, Calendar } from "lucide-react";
-import type { KanbanTask } from "./KanbanBoard.ts";
+import { Calendar, MessageCircle, Paperclip } from "lucide-react";
+import type { KanbanTask } from "./KanbanBoardTypes.ts";
 import {
   formatDate,
   getInitials,
@@ -13,13 +13,13 @@ import { useModalStore } from "../../store/useModalStore.ts";
 const KanbanCard: React.FC<KanbanTask> = (task) => {
   const { handleDragStart, handleDragEnd } = useDragAndDrop();
   const openTaskDetailModal = useModalStore(
-    (state) => state.openTaskDetailModal
+    (state) => state.openTaskDetailModal,
   );
 
   return (
     <div
       className={`bg-white rounded-lg shadow-sm border-l-4 ${getPriorityColor(
-        task?.priority || "low"
+        task?.priority || "low",
       )} p-4 hover:shadow-md transition-shadow cursor-pointer`}
       draggable={true}
       onDragEnd={handleDragEnd}
@@ -28,11 +28,15 @@ const KanbanCard: React.FC<KanbanTask> = (task) => {
       }
       id={task.id}
       onClick={() => openTaskDetailModal(task)}
+      aria-label={"task details"}
+      role={"article"}
     >
       <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 leading-snug">
         {task.title}
       </h3>
-      {task.description && <p className="text-neutral-500 mb-3 line-clamp-2">{task.description}</p>}
+      {task.description && (
+        <p className="text-neutral-500 mb-3 line-clamp-2">{task.description}</p>
+      )}
       {task.tags && task.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-3">
           {task.tags.slice(0, 3).map((tag, index) => (
