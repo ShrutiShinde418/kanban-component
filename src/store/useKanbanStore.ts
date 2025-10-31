@@ -18,33 +18,41 @@ type KanbanStore = {
   error: string;
   success: string;
   addKanbanBoard: (
-    board: Pick<KanbanColumnProps, "id" | "title" | "color" | "maxTasks">
+    board: Pick<KanbanColumnProps, "id" | "title" | "color" | "maxTasks">,
   ) => void;
   updateTaskStatusHandler: (
     taskId: KanbanTask["id"],
     originalTaskType: KanbanTask["status"],
-    newTaskType: KanbanTask["status"]
+    newTaskType: KanbanTask["status"],
   ) => void;
   deleteSingleTaskHandler: (
     taskId: KanbanTask["id"],
-    taskType: KanbanTask["status"]
+    taskType: KanbanTask["status"],
   ) => void;
   updateSingleTaskHandler: (
     taskType: KanbanTask["status"],
-    updatedTaskItem: Partial<KanbanTask>
+    updatedTaskItem: Partial<KanbanTask>,
   ) => void;
   resetErrorMessage: () => void;
   resetSuccessMessage: () => void;
+  updateKanbanBoard: (
+    propertyToUpdate: string,
+    boardId: string,
+    value: string | number,
+  ) => void;
 };
 
 const initialColumns = kanbanBoards.map((item) => item.id);
 
 export const useKanbanStore = create<KanbanStore>((set, get) => ({
   columns: initialColumns,
-  tasks: initialColumns.reduce((acc, value) => {
-    acc[value] = [];
-    return acc;
-  }, {} as Record<string, KanbanTask[]>),
+  tasks: initialColumns.reduce(
+    (acc, value) => {
+      acc[value] = [];
+      return acc;
+    },
+    {} as Record<string, KanbanTask[]>,
+  ),
   kanbanBoards: kanbanBoards,
   error: "",
   success: "",
@@ -60,6 +68,7 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
     }));
   },
   addTaskHandler: (taskType: string, task: KanbanTask) => {
+    const { kanbanBoards } = get();
     const board = kanbanBoards.find((b) => b.id === taskType);
 
     if (!board) return;
@@ -79,9 +88,9 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
   updateTaskStatusHandler: (
     taskId: KanbanTask["id"],
     originalTaskType: KanbanTask["status"],
-    newTaskType: KanbanTask["status"]
+    newTaskType: KanbanTask["status"],
   ) => {
-    const { tasks } = get();
+    const { tasks, kanbanBoards } = get();
 
     const board = kanbanBoards.find((b) => b.id === newTaskType);
 
@@ -96,7 +105,7 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
     }
 
     const updatedOriginalTasks = tasks[originalTaskType].filter(
-      (t) => t.id !== taskId
+      (t) => t.id !== taskId,
     );
 
     set((state) => ({
@@ -117,7 +126,7 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
     if (!task) return;
 
     const updatedTaskList = tasks[taskType].filter(
-      (item) => item.id !== taskId
+      (item) => item.id !== taskId,
     );
 
     set((state) => ({
@@ -134,7 +143,7 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
     if (!task) return;
 
     const updatedTasksArray = tasks[taskType].map((item) =>
-      item.id === task.id ? { ...item, ...updatedTaskItem } : item
+      item.id === task.id ? { ...item, ...updatedTaskItem } : item,
     );
 
     set((state) => ({
@@ -146,4 +155,14 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
   },
   resetErrorMessage: () => set(() => ({ error: "" })),
   resetSuccessMessage: () => set(() => ({ success: "" })),
+  updateKanbanBoard: (propertyToUpdate, boardId, value) => {
+    const board = get().kanbanBoards.find((b) => b.id === boardId);
+
+    if (!board) return;
+    set((state) => ({
+      kanbanBoards: state.kanbanBoards.map((b) =>
+        b.id === board.id ? { ...b, [propertyToUpdate]: value } : b,
+      ),
+    }));
+  },
 }));

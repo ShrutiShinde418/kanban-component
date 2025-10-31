@@ -11,19 +11,15 @@ const Menu: React.FC<MenuProps> = ({
   listStyles,
   columnDetails,
 }) => {
-  console.log(subMenuItems);
   const { openModalForColumnUpdate } = useModalStore(
     useShallow((state) => ({
       openModalForColumnUpdate: state.openModalForColumnUpdate,
-    }))
+    })),
   );
   const handleOnClick = (buttonTitle: string) => {
     if (buttonTitle === "Delete") return;
 
-    console.log("Column details:", columnDetails);
-    console.log("Calling openModalForColumnUpdate...");
     openModalForColumnUpdate({ option: buttonTitle, column: columnDetails });
-    console.log("Done calling openModalForColumnUpdate");
   };
 
   return (
@@ -32,7 +28,6 @@ const Menu: React.FC<MenuProps> = ({
     >
       <ul className={`flex flex-col ${listStyles}`}>
         {subMenuItems.map((subMenuItem: MenuItem) => {
-          console.log(subMenuItem);
           return (
             <li key={subMenuItem.id} className={`${menuItemClassNames}`}>
               <Button

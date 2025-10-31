@@ -5,16 +5,22 @@ import Modal from "../primitives/Modal";
 import { useModalStore } from "../../store/useModalStore";
 import Button from "../primitives/Button";
 import FormControl from "../primitives/FormControl";
+import { useKanbanStore } from "../../store/useKanbanStore.ts";
 
 const KanbanColumnOptionsModal: React.FC = () => {
   const { closeModal, kanbanColumnInfo } = useModalStore(
     useShallow((state) => ({
       closeModal: state.closeModal,
       kanbanColumnInfo: state.kanbanColumnInfo,
-    }))
+    })),
   );
 
-  console.log(kanbanColumnInfo);
+  const { updateKanbanBoard } = useKanbanStore(
+    useShallow((state) => ({
+      updateKanbanBoard: state.updateKanbanBoard,
+    })),
+  );
+
   const [columnName, setColumnName] = useState("");
   const [wipLimit, setWipLimit] = useState(0);
 
@@ -27,6 +33,12 @@ const KanbanColumnOptionsModal: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!kanbanColumnInfo?.column.id) return;
+    updateKanbanBoard(
+      kanbanColumnInfo?.option === "Rename" ? "title" : "maxTasks",
+      kanbanColumnInfo?.column.id,
+      kanbanColumnInfo?.option === "Rename" ? columnName : wipLimit,
+    );
     closeModal();
   };
 

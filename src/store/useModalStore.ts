@@ -1,11 +1,20 @@
 import { create } from "zustand";
-import type { KanbanTask, KanbanColumnProps } from "../components/KanbanBoard/KanbanBoardTypes";
+import type {
+  KanbanTask,
+  KanbanColumnProps,
+} from "../components/KanbanBoard/KanbanBoardTypes";
 
 type ModalStore = {
   taskInfo: string | null | KanbanTask;
   taskItem: KanbanTask | undefined;
-  kanbanColumnInfo: null | { option: string, column: Pick<KanbanColumnProps, "id" | "title" | "color" | "maxTasks"> }
-  openModalForColumnUpdate: (details: { option: string, column: Pick<KanbanColumnProps, "id" | "title" | "color" | "maxTasks"> }) => void;
+  kanbanColumnInfo: null | {
+    option: string;
+    column: Pick<KanbanColumnProps, "id" | "title" | "color" | "maxTasks">;
+  };
+  openModalForColumnUpdate: (details: {
+    option: string;
+    column: Pick<KanbanColumnProps, "id" | "title" | "color" | "maxTasks">;
+  }) => void;
   openModal: (taskType: string) => void;
   openTaskDetailModal: (task: KanbanTask) => void;
   closeModal: () => void;
@@ -21,6 +30,13 @@ export const useModalStore = create<ModalStore>((set) => ({
   openTaskDetailModal: (task: KanbanTask) => {
     set(() => ({ taskItem: task }));
   },
-  openModalForColumnUpdate: (details) => { console.log(details); set(() => ({ kanbanColumnInfo: details })) },
-  closeModal: () => set(() => ({ taskInfo: null, taskItem: undefined, kanbanColumnInfo: null })),
+  openModalForColumnUpdate: (details) => {
+    set(() => ({ kanbanColumnInfo: details }));
+  },
+  closeModal: () =>
+    set(() => ({
+      taskInfo: null,
+      taskItem: undefined,
+      kanbanColumnInfo: null,
+    })),
 }));

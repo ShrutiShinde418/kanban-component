@@ -8,7 +8,7 @@ const KanbanBoard: React.FC = () => {
     useShallow((state) => ({
       kanbanBoards: state.kanbanBoards,
       tasks: state.tasks,
-    }))
+    })),
   );
 
   return (
