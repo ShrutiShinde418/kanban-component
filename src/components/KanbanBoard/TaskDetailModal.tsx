@@ -15,32 +15,32 @@ const TaskDetailModal: React.FC = () => {
     useShallow((state) => ({
       taskItem: state.taskItem,
       closeModal: state.closeModal,
-    })),
+    }))
   );
 
   const { deleteSingleTaskHandler, updateSingleTaskHandler } = useKanbanStore(
     useShallow((state) => ({
       deleteSingleTaskHandler: state.deleteSingleTaskHandler,
       updateSingleTaskHandler: state.updateSingleTaskHandler,
-    })),
+    }))
   );
 
   const [title, setTitle] = useState<KanbanTask["title"]>(
-    taskItem?.["title"] ?? "",
+    taskItem?.["title"] ?? ""
   );
   const [description, setDescription] = useState<KanbanTask["description"]>(
-    taskItem?.description,
+    taskItem?.description
   );
   const [tags, setTags] = useState<KanbanTask["tags"]>(taskItem?.tags);
   const [tagInput, setTagInput] = useState<string>("");
   const [assignee, setAssignee] = useState<string>(
-    taskItem?.assignee?.name ?? "Unknown",
+    taskItem?.assignee?.name ?? "Unknown"
   );
   const [priority, setPriority] = useState<KanbanTask["priority"]>(
-    taskItem?.priority,
+    taskItem?.priority
   );
   const [dueDate, setDueDate] = useState<string | Date>(
-    taskItem?.dueDate ?? format(new Date(), "yyyy/MM/dd"),
+    taskItem?.dueDate ?? format(new Date(), "yyyy/MM/dd")
   );
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const TaskDetailModal: React.FC = () => {
 
   const removeTask = (
     taskId: KanbanTask["id"],
-    taskType: KanbanTask["status"],
+    taskType: KanbanTask["status"]
   ) => {
     deleteSingleTaskHandler(taskId, taskType);
     closeModal();
@@ -64,7 +64,7 @@ const TaskDetailModal: React.FC = () => {
 
   const updateTask = (
     taskId: KanbanTask["id"],
-    taskType: KanbanTask["status"],
+    taskType: KanbanTask["status"]
   ) => {
     const updatedTaskItem: Partial<KanbanTask> = {
       id: taskId,
@@ -129,6 +129,7 @@ const TaskDetailModal: React.FC = () => {
                 className:
                   "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
                 placeholder: "Enter task title",
+                name: "title",
                 required: true,
               }}
             />
@@ -142,6 +143,7 @@ const TaskDetailModal: React.FC = () => {
                 value: description,
                 onChange: (e) => setDescription(e.target.value),
                 rows: 4,
+                name: "description",
                 className:
                   "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none",
                 placeholder: "Enter task description",
@@ -159,6 +161,7 @@ const TaskDetailModal: React.FC = () => {
                     setPriority(e.target.value as KanbanTask["priority"])
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  name="priority"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -178,6 +181,7 @@ const TaskDetailModal: React.FC = () => {
                   className:
                     "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
                   required: true,
+                  name: "dueDate",
                 }}
                 icon={<Calendar size={16} className="inline mr-1" />}
               />
@@ -195,6 +199,7 @@ const TaskDetailModal: React.FC = () => {
                   "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
                 required: true,
                 placeholder: "Enter assignee name",
+                name: "assignee",
               }}
               icon={<User size={16} className="inline mr-1" />}
             />
@@ -211,6 +216,7 @@ const TaskDetailModal: React.FC = () => {
                   onChange={(e) => setTagInput(e.target.value)}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Add a tag"
+                  name="tag"
                 />
                 <Button
                   type="button"
@@ -245,7 +251,7 @@ const TaskDetailModal: React.FC = () => {
                 onClick={() =>
                   removeTask(
                     taskItem?.id as KanbanTask["id"],
-                    taskItem?.status as KanbanTask["status"],
+                    taskItem?.status as KanbanTask["status"]
                   )
                 }
               >
@@ -257,7 +263,7 @@ const TaskDetailModal: React.FC = () => {
                 onClick={() =>
                   updateTask(
                     taskItem?.id as KanbanTask["id"],
-                    taskItem?.status as KanbanTask["status"],
+                    taskItem?.status as KanbanTask["status"]
                   )
                 }
               >

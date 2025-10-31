@@ -15,6 +15,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
   color,
   tasks,
   id,
+  maxTasks,
 }) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const { handleDragOver, handleDrop, dragEnterState, setDragEnterState } =
@@ -60,7 +61,8 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
           <Menu
             subMenuItems={menuItems}
             classNames={showMenu ? "opacity-100 top-5 right-0" : ""}
-            menuItemClassNames="px-5 py-2 text-sm hover:bg-blue-500 hover:text-white font-semibold"
+            menuItemClassNames="text-sm hover:bg-blue-500 hover:text-white font-semibold"
+            columnDetails={{ id, title, maxTasks, color }}
           />
         )}
       </div>

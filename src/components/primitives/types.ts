@@ -1,4 +1,5 @@
 import React, { type ReactNode } from "react";
+import type { KanbanColumnProps } from "../KanbanBoard/KanbanBoardTypes";
 
 export interface ModalProps {
   open: boolean;
@@ -10,11 +11,11 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export type InputProps =
   | (React.InputHTMLAttributes<HTMLInputElement> & {
-      isTextArea?: false;
-    })
+    isTextArea?: false;
+  })
   | (React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-      isTextArea: true;
-    });
+    isTextArea: true;
+  });
 
 export interface FormControlProps {
   labelName: string;
@@ -34,4 +35,5 @@ export interface MenuProps {
   classNames?: string;
   menuItemClassNames?: string;
   listStyles?: string;
+  columnDetails: Pick<KanbanColumnProps, "id" | "title" | "color" | "maxTasks">;
 }

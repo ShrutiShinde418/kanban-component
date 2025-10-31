@@ -11,37 +11,43 @@ type KanbanStore = {
     [key: string]: KanbanTask[];
   };
   addTaskHandler: (taskType: string, task: KanbanTask) => void;
-  kanbanBoards: Pick<KanbanColumnProps, "id" | "title" | "color">[];
+  kanbanBoards: Pick<
+    KanbanColumnProps,
+    "id" | "title" | "color" | "maxTasks"
+  >[];
+  error: string;
+  success: string;
   addKanbanBoard: (
-    board: Pick<KanbanColumnProps, "id" | "title" | "color">,
+    board: Pick<KanbanColumnProps, "id" | "title" | "color" | "maxTasks">
   ) => void;
   updateTaskStatusHandler: (
     taskId: KanbanTask["id"],
     originalTaskType: KanbanTask["status"],
-    newTaskType: KanbanTask["status"],
+    newTaskType: KanbanTask["status"]
   ) => void;
   deleteSingleTaskHandler: (
     taskId: KanbanTask["id"],
-    taskType: KanbanTask["status"],
+    taskType: KanbanTask["status"]
   ) => void;
   updateSingleTaskHandler: (
     taskType: KanbanTask["status"],
-    updatedTaskItem: Partial<KanbanTask>,
+    updatedTaskItem: Partial<KanbanTask>
   ) => void;
+  resetErrorMessage: () => void;
+  resetSuccessMessage: () => void;
 };
 
 const initialColumns = kanbanBoards.map((item) => item.id);
 
 export const useKanbanStore = create<KanbanStore>((set, get) => ({
   columns: initialColumns,
-  tasks: initialColumns.reduce(
-    (acc, value) => {
-      acc[value] = [];
-      return acc;
-    },
-    {} as Record<string, KanbanTask[]>,
-  ),
+  tasks: initialColumns.reduce((acc, value) => {
+    acc[value] = [];
+    return acc;
+  }, {} as Record<string, KanbanTask[]>),
   kanbanBoards: kanbanBoards,
+  error: "",
+  success: "",
   addKanbanBoard: (board) => {
     if (get().kanbanBoards.length === 6) return;
     set((state) => ({
@@ -53,25 +59,44 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
       kanbanBoards: [...state.kanbanBoards, board],
     }));
   },
-  addTaskHandler: (taskType: string, task: KanbanTask) =>
-    set((state) => ({
-      tasks: {
-        ...state.tasks,
-        [taskType]: [...state.tasks[taskType], task],
-      },
-    })),
+  addTaskHandler: (taskType: string, task: KanbanTask) => {
+    const board = kanbanBoards.find((b) => b.id === taskType);
+
+    if (!board) return;
+
+    if (get().tasks[taskType].length >= board?.maxTasks) {
+      set(() => ({ error: `WIP Limit for ${board.title} reached.` }));
+    } else {
+      set((state) => ({
+        tasks: {
+          ...state.tasks,
+          [taskType]: [...state.tasks[taskType], task],
+        },
+        success: "Task added successfully",
+      }));
+    }
+  },
   updateTaskStatusHandler: (
     taskId: KanbanTask["id"],
     originalTaskType: KanbanTask["status"],
-    newTaskType: KanbanTask["status"],
+    newTaskType: KanbanTask["status"]
   ) => {
     const { tasks } = get();
+
+    const board = kanbanBoards.find((b) => b.id === newTaskType);
+
+    if (!board) return;
 
     const task = tasks[originalTaskType].find((t) => t.id === taskId);
     if (!task) return;
 
+    if (board.maxTasks <= tasks[newTaskType].length) {
+      set(() => ({ error: `WIP Limit for ${board.title} reached.` }));
+      return;
+    }
+
     const updatedOriginalTasks = tasks[originalTaskType].filter(
-      (t) => t.id !== taskId,
+      (t) => t.id !== taskId
     );
 
     set((state) => ({
@@ -92,7 +117,7 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
     if (!task) return;
 
     const updatedTaskList = tasks[taskType].filter(
-      (item) => item.id !== taskId,
+      (item) => item.id !== taskId
     );
 
     set((state) => ({
@@ -109,7 +134,7 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
     if (!task) return;
 
     const updatedTasksArray = tasks[taskType].map((item) =>
-      item.id === task.id ? { ...item, ...updatedTaskItem } : item,
+      item.id === task.id ? { ...item, ...updatedTaskItem } : item
     );
 
     set((state) => ({
@@ -119,4 +144,6 @@ export const useKanbanStore = create<KanbanStore>((set, get) => ({
       },
     }));
   },
+  resetErrorMessage: () => set(() => ({ error: "" })),
+  resetSuccessMessage: () => set(() => ({ success: "" })),
 }));

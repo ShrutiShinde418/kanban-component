@@ -8,6 +8,7 @@ import type {
 } from "../components/KanbanBoard/KanbanBoardTypes.ts";
 import { DUMMY_TASKS } from "../utils/task.utils.ts";
 import { kanbanBoards } from "../utils/column.utils.ts";
+import multipleTasks from "./tasks.json";
 
 const tasks: Record<string, KanbanTask[]> = {
   ...DUMMY_TASKS,
@@ -55,25 +56,36 @@ const boards: Pick<KanbanColumnProps, "id" | "title" | "color">[] = [
   ...kanbanBoards,
   { id: "review", color: "bg-violet-700", title: "Review" },
 ];
+
 const meta: Meta<typeof KanbanBoard> = {
   title: "Components/KanbanBoard",
   component: KanbanBoard,
 };
 
 export const Default: StoryObj<typeof KanbanBoard> = {
-  args: {
-    tasks: tasks,
+  parameters: {
+    layout: "fullscreen",
+    chromatic: { disableSnapshot: true },
+    docs: { inlineStories: true },
   },
   render: () => {
-    useKanbanStore.setState({ kanbanBoards: boards, tasks: tasks });
+    useKanbanStore.setState({ tasks: tasks, kanbanBoards: boards });
 
-    return <KanbanBoard tasks={tasks} />;
+    return <KanbanBoard />;
   },
 };
 
 export const EmptyState: StoryObj<typeof KanbanBoard> = {
   render: () => {
-    return <KanbanBoard tasks={{}} />;
+    useKanbanStore.setState({ tasks: {}, kanbanBoards: boards });
+    return <KanbanBoard />;
+  },
+};
+
+export const MultipleTasks: StoryObj<typeof KanbanBoard> = {
+  render: () => {
+    useKanbanStore.setState({ kanbanBoards, tasks: multipleTasks.tasks });
+    return <KanbanBoard />;
   },
 };
 

@@ -29,7 +29,7 @@ export interface KanbanColumnProps {
   title: string;
   color: string;
   taskIds?: string[];
-  maxTasks?: number;
+  maxTasks: number;
   numberOfTasks: number;
   tasks: KanbanTask[];
 }

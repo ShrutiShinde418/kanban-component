@@ -35,20 +35,20 @@ const AddTaskModal: React.FC = () => {
   const [linkInput, setLinkInput] = useState<string>("");
   const [priority, setPriority] = useState<KanbanTask["priority"]>("low");
   const [dueDate, setDueDate] = useState<string>(
-    format(new Date(), "yyyy/MM/dd"),
+    format(new Date(), "yyyy/MM/dd")
   );
 
   const { taskInfo, closeModal } = useModalStore(
     useShallow((state) => ({
       taskInfo: state.taskInfo,
       closeModal: state.closeModal,
-    })),
+    }))
   );
 
   const { addTaskHandler } = useKanbanStore(
     useShallow((state) => ({
       addTaskHandler: state.addTaskHandler,
-    })),
+    }))
   );
 
   const addTag = () => {
@@ -121,6 +121,18 @@ const AddTaskModal: React.FC = () => {
       id: nanoid(),
       createdAt: new Date(),
     });
+    setTitle("");
+    setDescription("");
+    setTags([]);
+    setTagInput("");
+    setAssignee("");
+    setAvatarPreview("");
+    setComments([]);
+    setCommentInput("");
+    setLinks([]);
+    setLinkInput("");
+    setPriority("low");
+    setDueDate("");
     closeModal();
   };
 
@@ -158,6 +170,7 @@ const AddTaskModal: React.FC = () => {
                   "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
                 placeholder: "Enter task title",
                 required: true,
+                name: "title",
               }}
             />
             <FormControl
@@ -173,6 +186,7 @@ const AddTaskModal: React.FC = () => {
                 className:
                   "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none",
                 placeholder: "Enter task description",
+                name: "description",
               }}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -187,6 +201,7 @@ const AddTaskModal: React.FC = () => {
                     setPriority(e.target.value as KanbanTask["priority"])
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  name="priority"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -206,6 +221,7 @@ const AddTaskModal: React.FC = () => {
                   className:
                     "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
                   required: true,
+                  name: "dueDate",
                 }}
                 icon={<Calendar size={16} className="inline mr-1" />}
               />
@@ -224,6 +240,7 @@ const AddTaskModal: React.FC = () => {
                     "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent",
                   required: true,
                   placeholder: "Enter assignee name",
+                  name: "assignee",
                 }}
                 icon={<User size={16} className="inline mr-1" />}
               />
@@ -250,6 +267,7 @@ const AddTaskModal: React.FC = () => {
                       accept="image/*"
                       onChange={handleAvatarUpload}
                       className="hidden"
+                      name="avatar"
                     />
                   </label>
                 </div>
@@ -268,6 +286,7 @@ const AddTaskModal: React.FC = () => {
                   onChange={(e) => setTagInput(e.target.value)}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Add a tag"
+                  name="tag"
                 />
                 <Button
                   type="button"
@@ -308,6 +327,7 @@ const AddTaskModal: React.FC = () => {
                   onChange={(e) => setLinkInput(e.target.value)}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Add a link URL"
+                  name="link"
                 />
                 <Button
                   type="button"
@@ -354,6 +374,7 @@ const AddTaskModal: React.FC = () => {
                   onChange={(e) => setCommentInput(e.target.value)}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Add a comment"
+                  name="comment"
                 />
                 <Button
                   type="button"
